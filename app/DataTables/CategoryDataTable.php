@@ -29,7 +29,8 @@ class CategoryDataTable extends DataTable
      */
     public function query(Category $model)
     {
-        return $model->newQuery();
+        return $model->orderBy('name', 'asc'); //whereIn('id',[2,3])->
+        //return $model->newQuery();
     }
 
     /**
@@ -53,6 +54,18 @@ class CategoryDataTable extends DataTable
                     'reset',
                     'reload',
                 ],
+                'pageLength' => 2,
+                'initComplete' => 'function (rows) {
+                    this.api().columns([1]).every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        
+                        $(input).appendTo($(column.footer())).on(\'keyup change\', function () {
+                            column.search($(this).val(), false, false, true).draw();
+                        });
+                    });
+                    $("tfoot tr").appendTo("thead");
+                    }'
             ]);
     }
 
@@ -64,7 +77,8 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name'
+            'image' => ['width' => '100px', 'name' => '', 'data' => '', 'orderable' => false, 'render' => '"<img width=\"100px\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
+            'Nombre' => ['name' => 'name', 'data' => 'name'],
         ];
     }
 
