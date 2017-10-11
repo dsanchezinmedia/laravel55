@@ -11,23 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @version October 9, 2017, 3:34 pm UTC
  *
  * @property string name
- * @property string description
  */
-class Category extends Model
+class Status extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
 
-    public $table = 'categories';
+    public $table = 'statuses';
     
-
-    protected $dates = ['deleted_at'];
-
-    protected $with = ['statuses'];
-
+    public $timestamps = false;
+    
     public $fillable = [
         'name',
-        'description',
-        'status_id'
     ];
 
     /**
@@ -37,7 +31,6 @@ class Category extends Model
      */
     protected $casts = [
         'name' => 'string',
-        'description' => 'string'
     ];
 
     /**
@@ -48,10 +41,4 @@ class Category extends Model
     public static $rules = [
         'name' => 'required'
     ];
-
-    public function statuses()
-    {
-        return $this->belongsTo('App\Models\Status', 'status_id');
-    }
-
 }

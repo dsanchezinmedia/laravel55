@@ -2,6 +2,9 @@
 
 namespace App\DataTables;
 
+use DB;
+use DataTables;
+use App\Http\Requests;
 use App\Models\Category;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -16,10 +19,17 @@ class CategoryDataTable extends DataTable
      */
     public function dataTable($query)
     {
+        
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'categories.datatables_actions');
-    }
+        return $dataTable
+            ->filterColumn('statuses.name', function($query, $keyword) {
+                $sql = "statuses.name = ?";
+                $query->whereRaw($sql, ["{$keyword}"]);
+            })
+            ->addColumn('action', 'categories.datatables_actions');
+        }
+
 
     /**
      * Get query source of dataTable.
@@ -29,7 +39,8 @@ class CategoryDataTable extends DataTable
      */
     public function query(Category $model)
     {
-        return $model->orderBy('name', 'asc'); //whereIn('id',[2,3])->
+        return $model->join('statuses', 'statuses.id','=','categories.status_id')->select(['*','categories.name as c_name']);
+
         //return $model->newQuery();
     }
 
@@ -46,7 +57,7 @@ class CategoryDataTable extends DataTable
             ->addAction(['width' => '80px'])
             ->parameters([
                 'dom'     => 'Bfrtip',
-                'order'   => [[0, 'desc']],
+                //'order'   => [[0, 'desc']],
                 'buttons' => [
                     'create',
                     'export',
@@ -54,12 +65,32 @@ class CategoryDataTable extends DataTable
                     'reset',
                     'reload',
                 ],
-                'pageLength' => 2,
+                'pageLength' => 5,
                 'initComplete' => 'function (rows) {
-                    this.api().columns([1]).every(function () {
+                    this.api().columns([1,2]).every(function (key) {
                         var column = this;
-                        var input = document.createElement("input");
-                        
+
+                        switch(key) {
+                            case 1:
+
+                                var input = document.createElement("input");
+                            
+                            break;
+                            case 2:
+
+                                var input = document.createElement("select");
+                                var array = [\'Activo\',\'Inactivo\',\'Sincronizando\'];
+
+                                for (var i = 0; i < array.length; i++) {
+                                    var option = document.createElement("option");
+                                    option.value = array[i];
+                                    option.text = array[i];
+                                    input.appendChild(option);
+                                }
+                            
+                            break;
+                        }                        
+                                                 
                         $(input).appendTo($(column.footer())).on(\'keyup change\', function () {
                             column.search($(this).val(), false, false, true).draw();
                         });
@@ -78,7 +109,8 @@ class CategoryDataTable extends DataTable
     {
         return [
             'image' => ['width' => '100px', 'name' => '', 'data' => '', 'orderable' => false, 'render' => '"<img width=\"100px\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
-            'Nombre' => ['name' => 'name', 'data' => 'name'],
+            'Nombre' => ['name' => 'name', 'data' => 'c_name'],
+            'Estado' => ['name' => 'statuses.name', 'data' => 'statuses.name'],
         ];
     }
 
