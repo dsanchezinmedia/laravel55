@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use DB;
+use Input;
 use DataTables;
 use App\Http\Requests;
 use App\Models\Category;
@@ -19,16 +20,21 @@ class CategoryDataTable extends DataTable
      */
     public function dataTable($query)
     {
-        
+
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->filterColumn('statuses.name', function($query, $keyword) {
-                $sql = "statuses.name = ?";
-                $query->whereRaw($sql, ["{$keyword}"]);
+            ->filterColumn('s_name', function($query, $keyword) {
+                //$sql = "statuses.name = ?";
+                //$query->whereRaw($sql, ["{$keyword}"]);
+                //$query->where('statuses.name','=', "{$keyword}");
+            })
+            ->filterColumn('c_name', function($query, $keyword) {
+                //$query->where('categories.name','like', "%{$keyword}%");
             })
             ->addColumn('action', 'categories.datatables_actions');
-        }
+            
+    }
 
 
     /**
@@ -39,16 +45,62 @@ class CategoryDataTable extends DataTable
      */
     public function query(Category $model)
     {
-        return $model->join('statuses', 'statuses.id','=','categories.status_id')->select(['*','categories.name as c_name']);
+        $column = $this->request->all()['columns'];
 
+        $query = $model
+            ->join('statuses', 'statuses.id','=','categories.status_id')
+            ->select([
+                'categories.id as id',
+                'categories.name as c_name',
+                'statuses.id as s_id',
+                'statuses.name as s_name',
+                ]);
+            
+        if(isset($column[1]['search']['value']))
+            $query->where('categories.name','like', "%".$column[1]['search']['value']."%");
+    
+        if(isset($column[2]['search']['value']))
+            $query->where('statuses.name','=', $column[2]['search']['value']);
+
+        return $query;
+        
         //return $model->newQuery();
     }
-
+    
     /**
      * Optional method if you want to use html builder.
      *
      * @return \Yajra\DataTables\Html\Builder
      */
+    
+    /*
+    public function ajax()
+    {
+        $builder = Category::join('statuses', 'statuses.id','=','categories.status_id')
+        ->where('statuses.name', '=', 'activo')
+        ->where('categories.name', 'like', '%pr%')
+        ->select([
+                'categories.id as id',
+                'categories.name as c_name',
+                'statuses.id as s_id',
+                'statuses.name as s_name',
+                ]);
+
+        return DataTables::of($builder)
+        ->filterColumn('s_name', function($query, $keyword) {
+            //$sql = "statuses.name = ?";
+            //$query->whereRaw($sql, ["{$keyword}"]);
+            $query->where('statuses.name','=', "{$keyword}");
+        })
+        ->filterColumn('c_name', function($query, $keyword) {
+            $query->where('categories.name','like', "%{$keyword}%");
+        })
+        ->addColumn('action', 'categories.datatables_actions')
+        ->make(true);        
+    }
+    */
+    
+
     public function html()
     {
         return $this->builder()
@@ -67,18 +119,21 @@ class CategoryDataTable extends DataTable
                 ],
                 'pageLength' => 5,
                 'initComplete' => 'function (rows) {
+
                     this.api().columns([1,2]).every(function (key) {
                         var column = this;
-
+                        var name = rows.aoColumns[key].name;
+                        
                         switch(key) {
                             case 1:
+                                var input = $(\'<input type="text" name="\'+name+\'">\');
 
-                                var input = document.createElement("input");
-                            
                             break;
                             case 2:
 
                                 var input = document.createElement("select");
+                                input.name = name;
+
                                 var array = [\'Activo\',\'Inactivo\',\'Sincronizando\'];
 
                                 for (var i = 0; i < array.length; i++) {
@@ -109,8 +164,8 @@ class CategoryDataTable extends DataTable
     {
         return [
             'image' => ['width' => '100px', 'name' => '', 'data' => '', 'orderable' => false, 'render' => '"<img width=\"100px\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
-            'Nombre' => ['name' => 'name', 'data' => 'c_name'],
-            'Estado' => ['name' => 'statuses.name', 'data' => 'statuses.name'],
+            'Nombre' => ['name' => 'c_name', 'data' => 'c_name'],
+            'Estado' => ['name' => 's_name', 'data' => 's_name'],
         ];
     }
 
