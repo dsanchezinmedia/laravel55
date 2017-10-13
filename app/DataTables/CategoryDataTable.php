@@ -3,7 +3,6 @@
 namespace App\DataTables;
 
 use DB;
-use Input;
 use DataTables;
 use App\Http\Requests;
 use App\Models\Category;
@@ -52,6 +51,7 @@ class CategoryDataTable extends DataTable
             ->select([
                 'categories.id as id',
                 'categories.name as c_name',
+                'categories.created_at as c_created_at',
                 'statuses.id as s_id',
                 'statuses.name as s_name',
                 ]);
@@ -59,7 +59,7 @@ class CategoryDataTable extends DataTable
         if(isset($column[1]['search']['value']))
             $query->where('categories.name','like', "%".$column[1]['search']['value']."%");
     
-        if(isset($column[2]['search']['value']))
+        if(isset($column[2]['search']['value']) && $column[2]['search']['value'] <> 'Todos')
             $query->where('statuses.name','=', $column[2]['search']['value']);
 
         return $query;
@@ -120,6 +120,8 @@ class CategoryDataTable extends DataTable
                 'pageLength' => 5,
                 'initComplete' => 'function (rows) {
 
+                    $(".dataTables_filter").remove();
+
                     this.api().columns([1,2]).every(function (key) {
                         var column = this;
                         var name = rows.aoColumns[key].name;
@@ -134,7 +136,7 @@ class CategoryDataTable extends DataTable
                                 var input = document.createElement("select");
                                 input.name = name;
 
-                                var array = [\'Activo\',\'Inactivo\',\'Sincronizando\'];
+                                var array = [\'Todos\',\'Activo\',\'Inactivo\',\'Sincronizando\'];
 
                                 for (var i = 0; i < array.length; i++) {
                                     var option = document.createElement("option");
@@ -166,6 +168,7 @@ class CategoryDataTable extends DataTable
             'image' => ['width' => '100px', 'name' => '', 'data' => '', 'orderable' => false, 'render' => '"<img width=\"100px\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
             'Nombre' => ['name' => 'c_name', 'data' => 'c_name'],
             'Estado' => ['name' => 's_name', 'data' => 's_name'],
+            'Fecha' => ['name' => 'c_created_at', 'data' => 'c_created_at'],
         ];
     }
 
