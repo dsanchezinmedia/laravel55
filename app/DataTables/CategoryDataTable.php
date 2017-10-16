@@ -119,40 +119,7 @@ class CategoryDataTable extends DataTable
                 ],
                 'pageLength' => 5,
                 'initComplete' => 'function (rows) {
-
-                    $(".dataTables_filter").remove();
-
-                    this.api().columns([1,2]).every(function (key) {
-                        var column = this;
-                        var name = rows.aoColumns[key].name;
-                        
-                        switch(key) {
-                            case 1:
-                                var input = $(\'<input type="text" name="\'+name+\'">\');
-
-                            break;
-                            case 2:
-
-                                var input = document.createElement("select");
-                                input.name = name;
-
-                                var array = [\'Todos\',\'Activo\',\'Inactivo\',\'Sincronizando\'];
-
-                                for (var i = 0; i < array.length; i++) {
-                                    var option = document.createElement("option");
-                                    option.value = array[i];
-                                    option.text = array[i];
-                                    input.appendChild(option);
-                                }
-                            
-                            break;
-                        }                        
-                                                 
-                        $(input).appendTo($(column.footer())).on(\'keyup change\', function () {
-                            column.search($(this).val(), false, false, true).draw();
-                        });
-                    });
-                    $("tfoot tr").appendTo("thead");
+                        initTableData(rows, this);
                     }'
             ]);
     }
@@ -165,7 +132,7 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'image' => ['width' => '100px', 'name' => '', 'data' => '', 'orderable' => false, 'render' => '"<img width=\"100px\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
+            'image' => ['width' => '100px', 'name' => '', 'data' => 'id', 'orderable' => false, 'render' => '"<img width=\"100px\" data-id=\""+data+"\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
             'Nombre' => ['name' => 'c_name', 'data' => 'c_name'],
             'Estado' => ['name' => 's_name', 'data' => 's_name'],
             'Fecha' => ['name' => 'c_created_at', 'data' => 'c_created_at'],
