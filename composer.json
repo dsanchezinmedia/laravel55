@@ -30,7 +30,8 @@
             "database/factories"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "dsanchezInmedia\\DataTable\\": "packages/dsanchezinmedia/datatable/src"
         }
     },
     "autoload-dev": {

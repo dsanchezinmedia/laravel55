@@ -29,7 +29,7 @@ class CategoryController extends AppBaseController
      */
     public function index(CategoryDataTable $categoryDataTable)
     {
-        return $categoryDataTable->render('categories.index');
+                return $categoryDataTable->render('categories.index');
     }
 
     /**

@@ -1,0 +1,12 @@
+{
+    "name": "dsanchezinmedia/datatable",
+    "description": "Description datatable",
+    "authors": [
+        {
+            "name": "David",
+            "email": "david.sanchez@inmediastudio.es"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
