@@ -11,6 +11,11 @@ use Yajra\DataTables\EloquentDataTable;
 
 class CategoryDataTable extends DataTable
 {
+
+    //protected $exportColumns = '*';
+    //protected $printColumns = '*';
+
+    
     /**
      * Build DataTable class.
      *
@@ -106,7 +111,7 @@ class CategoryDataTable extends DataTable
         return  $this->builder()
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->addAction(['width' => '80px'])
+            ->addAction(['width' => '80px', 'exportable' => false, 'printable' => false])
             ->parameters([
                 'dom'     => 'Bfrtip',
                 //'order'   => [[0, 'desc']],
@@ -133,8 +138,8 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            ' ' => ['width' => '100px', 'name' => '', 'data' => NULL, 'orderable' => false, 'defaultContent' => 'ver mas', 'className' => 'details-control'],
-            'image' => ['width' => '100px', 'name' => '', 'data' => 'id', 'orderable' => false, 'render' => '"<img width=\"100px\" data-id=\""+data+"\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
+            ' ' => ['width' => '100px', 'name' => '', 'orderable' => false, 'defaultContent' => 'ver mas', 'className' => 'details-control', 'exportable' => false, 'printable' => false],
+            'image' => ['width' => '100px', 'name' => '', 'data' => 'id', 'orderable' => false, 'render' => '"<img width=\"100px\" data-id=\""+data+"\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"', 'exportable' => false, 'printable' => false],
             'Nombre' => ['name' => 'c_name', 'data' => 'c_name'],
             'Estado' => ['name' => 's_name', 'data' => 's_name'],
             'Fecha' => ['name' => 'c_created_at', 'data' => 'c_created_at'],
