@@ -28,6 +28,7 @@
         <table class="table table-bordered" id="users-table">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Id</th>
                     <th>Name</th>
                     <th>Estado</th>
@@ -35,16 +36,14 @@
                 </tr>
             </thead>
             <tfoot>
+                <th></th>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Estado</th>
                 <th>Action</th>            
             </tfoot>
         </table>
-
-
-
-
+        
         </div>
 
         <!-- jQuery -->
@@ -53,12 +52,29 @@
         <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript -->
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
         <!-- App scripts -->
         @stack('scripts')
 
         <script>var datatable = {!! json_encode($datatable) !!};</script>
 
-        <script src="{{ asset('js/datatables/test/table.js') }}"></script>
+        <script src="{{ asset('js/datatables/test/table.js') }}"></script>       
+        <script id="details-template" type="text/x-handlebars-template">
+            <table class="table">
+                <tr>
+                    <td>Full name:</td>
+                    <td>@{{name}}</td>
+                </tr>
+                <tr>
+                    <td>ID status:</td>
+                    <td>@{{statuses.id}}</td>
+                </tr>
+                <tr>
+                    <td>Extra info:</td>
+                    <td>lalalala</td>
+                </tr>
+            </table>
+        </script>
 
     </body>
 </html>

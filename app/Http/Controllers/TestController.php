@@ -29,6 +29,7 @@ class TestController extends AppBaseController
     public function getIndex()
     {
         $datatable['columns'] = [
+            ['className' => 'details-control', 'orderable' => false, 'searchable' => false, 'data' => NULL, 'defaultContent' => 'ver mas'],  
             ['data' => 'id', 'name' => 'id'],
             ['data' => 'name', 'name' => 'name'],
             ['data' => 's_name', 'name' => 's_name'],

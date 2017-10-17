@@ -187,6 +187,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,       
         
+        ProAI\Handlebars\HandlebarsServiceProvider::class,
         //dsanchezInmedia\DataTable\DataTableServiceProvider::class,
     ],
 
