@@ -21,3 +21,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::resource('categories', 'CategoryController');
+
+
+Route::get('/testdatatable/data', 'TestController@anyData');
+Route::get('/testdatatable', 'TestController@getIndex');
