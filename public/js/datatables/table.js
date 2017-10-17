@@ -34,6 +34,28 @@ var initTableData = function(rows, _this) {
     $("tfoot tr").appendTo("thead");
 };
 
+$(document).ready(function() {
+
+    var template = Handlebars.compile($("#details-template").html());
+    var table = LaravelDataTables.categories;
+
+    // Add event listener for opening and closing details
+    $('#categories tbody').on('click', 'td.details-control', function() {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(template(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+});
+
 $(document).on("click", ".delele-data-table", function(e) {
     var _this = this;
     console.log(_this);

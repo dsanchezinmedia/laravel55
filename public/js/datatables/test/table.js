@@ -18,6 +18,8 @@ $(document).ready(function() {
             }
         });
 
+        console.log(table);
+
         // Add event listener for opening and closing details
         $('#users-table tbody').on('click', 'td.details-control', function() {
             var tr = $(this).closest('tr');

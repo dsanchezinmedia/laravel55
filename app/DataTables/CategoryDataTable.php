@@ -103,7 +103,7 @@ class CategoryDataTable extends DataTable
 
     public function html()
     {
-        return $this->builder()
+        return  $this->builder()
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->addAction(['width' => '80px'])
@@ -122,6 +122,7 @@ class CategoryDataTable extends DataTable
                         initTableData(rows, this);
                     }'
             ]);
+
     }
 
     /**
@@ -132,6 +133,7 @@ class CategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            ' ' => ['width' => '100px', 'name' => '', 'data' => NULL, 'orderable' => false, 'defaultContent' => 'ver mas', 'className' => 'details-control'],
             'image' => ['width' => '100px', 'name' => '', 'data' => 'id', 'orderable' => false, 'render' => '"<img width=\"100px\" data-id=\""+data+"\" height=\"30px\" src=\"http://www.masquenegocio.com/wp-content/uploads/2014/03/inMediaStudio-logo.jpg\" height=\"50\"/>"'],
             'Nombre' => ['name' => 'c_name', 'data' => 'c_name'],
             'Estado' => ['name' => 's_name', 'data' => 's_name'],
